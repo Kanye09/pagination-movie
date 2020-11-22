@@ -9,8 +9,9 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState('');
   const [page, setPage] = useState(1);
+  const [starting, setStarting] = useState(true);
 
-
+console.log('data', data)
   const getData = () => {
     setLoading(true)
     fetch('https://api.themoviedb.org/3/person/popular?api_key=df8b08ecb436696fee41a00f8d87a540&language=en&page='+ page)
@@ -26,8 +27,10 @@ const App = () => {
   console.log('data', data)
       
   useEffect(() => {
-    getData()
-  
+    setTimeout(() => {
+      getData()
+      setStarting(false)
+    }, 3000)
   }, [])
 
   const next = () => {
@@ -44,20 +47,23 @@ const App = () => {
   }
 
   return (
-    <div className='home'>
+      starting?
+      <img src='https://media.giphy.com/media/Vw3k4Vro0Q5KE/giphy.gif' alt='starting' style={{with: '100%', height: '100vh'}} />
+      :
+      <div className='home'>
       <div className='nav'>
         <div className='logo'>
           <BiCameraMovie />
         </div>
         <div className='pagination'>
           <AiFillCaretLeft onClick={prev} />
-          -----
+          
           { page === 1 ? <AiOutlineNumber/> : page - 1 }
-          -----
+          
           <strong>{ page }</strong>
-          -----
+          
           { page + 1 }
-          -----
+          
           <AiFillCaretRight onClick={next}/>
         </div>  
       </div>
@@ -65,7 +71,7 @@ const App = () => {
             loading
             ?
             <div className='loading'>
-              <img src='https://media.giphy.com/media/IwSG1QKOwDjQk/giphy.gif' alt='loading' />
+              <img src='https://media.giphy.com/media/STwf2H0syjqwVW8pql/giphy.gif' alt='loading' />
             </div>
             :
             <div className='all'>
@@ -73,9 +79,10 @@ const App = () => {
                 data.map(actor => {
                   return (
                    <div class="row">
-                      <div class="column">
                          <div class="card">
-                          <img src={'http://image.tmdb.org/t/p/w185/' + actor.profile_path} />
+                         <img src={actor.profile_path ? 'http://image.tmdb.org/t/p/w185/' + actor.profile_path : 'https://avatars2.githubusercontent.com/u/3010387?s=400&v=4'} />
+                          <div className='actorName'>
+                              {actor.profile_path ? actor.name : 'Marat Gaipov'}
                          </div>
                       </div>
                  </div>
